@@ -1,0 +1,6 @@
+.trace/
+__pycache__/
+.env
+.env.*
+Thumbs.db
+desktop.ini

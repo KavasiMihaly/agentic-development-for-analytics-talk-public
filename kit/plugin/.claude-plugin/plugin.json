@@ -1,0 +1,13 @@
+{
+  "name": "agentic-analytics-kit",
+  "version": "1.0.0",
+  "description": "Guardrails for agentic analytics work: a requirements interview, a read-only plan reviewer, a no-data-rows boundary and an action trace.",
+  "author": {
+    "name": "Mihaly Kavasi",
+    "url": "https://github.com/KavasiMihaly"
+  },
+  "homepage": "https://github.com/KavasiMihaly/agentic-development-for-analytics-talk-public",
+  "repository": "https://github.com/KavasiMihaly/agentic-development-for-analytics-talk-public",
+  "license": "MIT",
+  "keywords": ["analytics", "power-bi", "guardrails", "decision-log", "hooks"]
+}

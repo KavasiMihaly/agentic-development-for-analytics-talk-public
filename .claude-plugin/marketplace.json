@@ -1,0 +1,16 @@
+{
+  "name": "agentic-analytics",
+  "description": "The starter kit from the session Agentic Development for Analytics.",
+  "owner": {
+    "name": "Mihaly Kavasi"
+  },
+  "plugins": [
+    {
+      "name": "agentic-analytics-kit",
+      "description": "Guardrails for agentic analytics work: a requirements interview, a read-only plan reviewer, a no-data-rows boundary and an action trace.",
+      "source": "./kit/plugin",
+      "category": "development",
+      "homepage": "https://github.com/KavasiMihaly/agentic-development-for-analytics-talk-public"
+    }
+  ]
+}

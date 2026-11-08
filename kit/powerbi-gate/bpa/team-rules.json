@@ -1,0 +1,63 @@
+[
+  {
+    "ID": "TEAM_01_MEASURE_DESCRIPTION_AND_FORMAT",
+    "Name": "Rule 1: every measure has a description and a format string",
+    "Category": "Team rules",
+    "Description": "A measure without a description cannot say which definition it implements, and one without a format string renders raw numbers. A dynamic format string (formatStringDefinition) counts as a format string.",
+    "Severity": 3,
+    "Scope": "Measure",
+    "Expression": "string.IsNullOrWhitespace(Description) or (string.IsNullOrWhitespace(FormatString) and string.IsNullOrWhitespace(FormatStringExpression))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "TEAM_02_PLAIN_REVENUE_NEEDS_RID",
+    "Name": "Rule 2: a measure called Revenue, Sales or Total Revenue must name its definition",
+    "Category": "Team rules",
+    "Description": "Revenue on its own is ambiguous. A measure named or translated as plain Revenue, Sales or Total Revenue (any case, surrounding spaces ignored) fails unless its description starts with a definition ID, a spaced dash and the definition, e.g. 'R3 — Board revenue: ...'. An em dash, en dash or hyphen is accepted.",
+    "Severity": 3,
+    "Scope": "Measure",
+    "Expression": "(RegEx.IsMatch(Name, \"(?i)^\\s*(revenue|sales|total\\s+revenue)\\s*$\") or TranslatedNames.Any(it != null and RegEx.IsMatch(it, \"(?i)^\\s*(revenue|sales|total\\s+revenue)\\s*$\"))) and (string.IsNullOrWhitespace(Description) or not RegEx.IsMatch(Description, \"^\\S+\\s+[—–-]\\s+\\S\"))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "TEAM_03_NO_BIDIRECTIONAL_RELATIONSHIP",
+    "Name": "Rule 3: no bidirectional relationships",
+    "Category": "Team rules",
+    "Description": "Filters flow from dimension to fact only. Bidirectional cross-filtering creates ambiguous paths and can change totals silently.",
+    "Severity": 3,
+    "Scope": "Relationship",
+    "Expression": "CrossFilteringBehavior = \"BothDirections\"",
+    "FixExpression": "CrossFilteringBehavior = CrossFilteringBehavior.OneDirection",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "TEAM_04_KEY_HIDDEN_NOT_SUMMARIZED",
+    "Name": "Rule 4: key columns are hidden and summarizeBy none",
+    "Category": "Team rules",
+    "Description": "A key column is one whose name ends in Key or that takes part in a relationship (date-typed columns excepted, so a marked date table's Date column stays visible). Keys must be hidden (column or table) and must not summarize.",
+    "Severity": 3,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "(Name.EndsWith(\"Key\") or UsedInRelationships.Any()) and DataType <> \"DateTime\" and ((not IsHidden and not Table.IsHidden) or SummarizeBy <> \"None\")",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "TEAM_05_DATE_TABLE_MARKED",
+    "Name": "Rule 5: a date table is marked",
+    "Category": "Team rules",
+    "Description": "The model needs one table marked as a date table: dataCategory Time and a date-typed key column. Fiscal-year time intelligence depends on it.",
+    "Severity": 3,
+    "Scope": "Model",
+    "Expression": "not Tables.Any(DataCategory = \"Time\" and Columns.Any(IsKey and DataType = \"DateTime\"))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "TEAM_06_VISIBLE_MEASURE_IN_FOLDER",
+    "Name": "Rule 6: every visible measure is in a display folder",
+    "Category": "Team rules",
+    "Description": "Visible measures are grouped in display folders (Revenue, Margin, ...) so the field list stays readable. Reported as a warning: it does not change a number.",
+    "Severity": 2,
+    "Scope": "Measure",
+    "Expression": "not IsHidden and not Table.IsHidden and string.IsNullOrWhitespace(DisplayFolder)",
+    "CompatibilityLevel": 1200
+  }
+]

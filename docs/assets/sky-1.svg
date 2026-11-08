@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0F172A"/>
+      <stop offset="0.55" stop-color="#1E293B"/>
+      <stop offset="1" stop-color="#C87092"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#FFE7B0" stop-opacity=".5"/><stop offset="1" stop-color="#FFE7B0" stop-opacity="0"/></radialGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F5A028"/><stop offset="0.44" stop-color="#C87092"/><stop offset="0.9" stop-color="#34B8EA"/></linearGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0.92"/><stop offset="1" stop-color="#AADCF5" stop-opacity="0"/></linearGradient>
+    <clipPath id="c"><circle cx="50" cy="50" r="50"/></clipPath>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g fill="#F8FAFC">
+    <circle cx="180" cy="120" r="2" opacity=".5"/><circle cx="420" cy="70" r="1.6" opacity=".4"/><circle cx="640" cy="160" r="2.2" opacity=".35"/>
+    <circle cx="900" cy="90" r="1.8" opacity=".5"/><circle cx="1120" cy="180" r="1.6" opacity=".35"/><circle cx="1380" cy="60" r="2.2" opacity=".45"/>
+    <circle cx="1500" cy="240" r="1.6" opacity=".3"/><circle cx="760" cy="300" r="1.4" opacity=".25"/><circle cx="300" cy="330" r="1.6" opacity=".25"/>
+  </g>
+  <circle cx="1240" cy="900" r="460" fill="url(#glow)"/>
+  <g transform="translate(1090 750) scale(3)">
+    <circle cx="50" cy="50" r="50" fill="url(#g)"/>
+    <g clip-path="url(#c)" opacity="0.8">
+      <rect x="26" y="60" width="12" height="42" rx="1" fill="url(#b)"/>
+      <rect x="44" y="47" width="12" height="55" rx="1" fill="url(#b)"/>
+      <rect x="62" y="33" width="12" height="69" rx="1" fill="url(#b)"/>
+    </g>
+  </g>
+</svg>

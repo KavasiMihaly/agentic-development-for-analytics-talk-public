@@ -1,0 +1,4 @@
+{
+  "check_tools": ["scripts/reconcile_to_ledger.py"],
+  "data_extensions": ["xlsx"]
+}

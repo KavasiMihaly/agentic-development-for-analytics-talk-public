@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E293B"/>
+      <stop offset="0.62" stop-color="#C87092"/>
+      <stop offset="1" stop-color="#F5A028"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#FFE7B0" stop-opacity=".55"/><stop offset="1" stop-color="#FFE7B0" stop-opacity="0"/></radialGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F5A028"/><stop offset="0.44" stop-color="#C87092"/><stop offset="0.9" stop-color="#34B8EA"/></linearGradient>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0.92"/><stop offset="1" stop-color="#AADCF5" stop-opacity="0"/></linearGradient>
+    <clipPath id="c"><circle cx="50" cy="50" r="50"/></clipPath>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1250" cy="640" r="440" fill="url(#glow)"/>
+  <g transform="translate(1110 500) scale(2.8)">
+    <circle cx="50" cy="50" r="50" fill="url(#g)"/>
+    <g clip-path="url(#c)" opacity="0.8">
+      <rect x="26" y="60" width="12" height="42" rx="1" fill="url(#b)"/>
+      <rect x="44" y="47" width="12" height="55" rx="1" fill="url(#b)"/>
+      <rect x="62" y="33" width="12" height="69" rx="1" fill="url(#b)"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git reset *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr merge *)",
+      "PowerShell(git commit *)",
+      "PowerShell(git push *)",
+      "PowerShell(git merge *)",
+      "PowerShell(git rebase *)",
+      "PowerShell(git reset *)",
+      "PowerShell(gh pr create *)",
+      "PowerShell(gh pr merge *)",
+      "Bash(pip install *)",
+      "Bash(npm install *)",
+      "Bash(npx *)",
+      "PowerShell(pip install *)",
+      "PowerShell(npm install *)",
+      "PowerShell(npx *)"
+    ],
+    "deny": [
+      "mcp__powerbi-modeling__dax_query_operations",
+      "Read(**/*.parquet)",
+      "Read(**/*.csv)",
+      "Read(**/*.tsv)",
+      "Edit(/bpa/**)",
+      "Edit(/tools/**)",
+      "Edit(/.github/**)",
+      "Edit(/docs/data-contract.yaml)",
+      "Edit(/.claude/**)",
+      "Edit(/.mcp.json)",
+      "Edit(/.env)",
+      "Edit(/.trace/**)"
+    ]
+  }
+}

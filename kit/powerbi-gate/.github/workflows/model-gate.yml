@@ -1,0 +1,103 @@
+name: model-gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: model-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Model gate
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      GATE_TOOL: ${{ vars.MODEL_GATE_TOOL || 'te2' }}
+      TE_ZIP_SHA256: ${{ vars.TE_ZIP_SHA256 }}
+      TE2_VERSION: '2.26.0'
+      TE2_SHA256: 66644A22F07417BC6C345641C05B3A24D3F629EEE29D5D78CEB1CA45CE021A36
+      PYTHONUTF8: '1'
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Take the rules and gate tools from the base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          $base = "origin/$env:GITHUB_BASE_REF"
+          foreach ($dir in 'bpa', 'tools') {
+            git cat-file -e "${base}:$dir" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+              if (Test-Path $dir) { Remove-Item -Recurse -Force $dir }
+              git checkout $base -- $dir
+              if ($LASTEXITCODE -ne 0) { exit 1 }
+              "$dir/ comes from $env:GITHUB_BASE_REF"
+            } else {
+              "::warning::$dir/ is not on $env:GITHUB_BASE_REF yet - using the pull request's copy"
+            }
+          }
+          $global:LASTEXITCODE = 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the PBIR validator's and trace check's dependencies
+        run: python -m pip install --disable-pip-version-check --quiet "jsonschema==4.23.0" "PyYAML==6.0.2"
+
+      - name: Install te (Tabular Editor CLI)
+        if: env.GATE_TOOL == 'te'
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'te.zip'
+          Invoke-WebRequest 'https://cdn.tabulareditor.com/files/cli/latest/te-win-x64.zip' -OutFile $zip
+          $hash = (Get-FileHash $zip -Algorithm SHA256).Hash
+          "te download SHA256 $hash"
+          if ($env:TE_ZIP_SHA256 -and $hash -ne $env:TE_ZIP_SHA256) { '::error::te download does not match vars.TE_ZIP_SHA256'; exit 1 }
+          Expand-Archive $zip -DestinationPath (Join-Path $env:RUNNER_TEMP 'te')
+          $exe = Get-ChildItem (Join-Path $env:RUNNER_TEMP 'te') -Recurse -Filter 'te.exe' | Select-Object -First 1
+          if (-not $exe) { '::error::te.exe not found in the download'; exit 1 }
+          "TE_CLI=$($exe.FullName)" >> $env:GITHUB_ENV
+          & $exe.FullName --version
+
+      - name: Install TabularEditor.exe (pinned)
+        if: env.GATE_TOOL == 'te2'
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'te2.zip'
+          Invoke-WebRequest "https://github.com/TabularEditor/TabularEditor/releases/download/$env:TE2_VERSION/TabularEditor.Portable.zip" -OutFile $zip
+          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne $env:TE2_SHA256) { '::error::TabularEditor.exe download does not match its pinned SHA256'; exit 1 }
+          Expand-Archive $zip -DestinationPath (Join-Path $env:RUNNER_TEMP 'te2')
+          "TE2_CLI=$(Join-Path $env:RUNNER_TEMP 'te2' 'TabularEditor.exe')" >> $env:GITHUB_ENV
+
+      - name: No suppressed BPA rules
+        run: python tools/gate.py --step ignores
+
+      - name: te validate
+        if: ${{ !cancelled() && env.GATE_TOOL == 'te' }}
+        run: python tools/gate.py --step validate
+
+      - name: Relationship check
+        if: ${{ !cancelled() }}
+        run: python tools/gate.py --step relationships
+
+      - name: BPA - team rules
+        if: ${{ !cancelled() }}
+        run: python tools/gate.py --step bpa --tool $env:GATE_TOOL
+
+      - name: PBIR validation
+        if: ${{ !cancelled() }}
+        run: python tools/gate.py --step pbir
+
+      - name: Trace check - every measure and page has a decision
+        if: ${{ !cancelled() }}
+        run: python tools/gate.py --step trace
